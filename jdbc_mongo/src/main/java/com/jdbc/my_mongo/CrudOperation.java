@@ -8,6 +8,8 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 
 public class CrudOperation {
 	
@@ -25,7 +27,19 @@ public class CrudOperation {
 		mongoClient = MongoClients.create(url);
 		mongoDatabase = mongoClient.getDatabase(database);
 		docCollection = mongoDatabase.getCollection(collection);
-		
+	}
+	
+	public void updateData(int id,String name,float height) {
+		docCollection.updateOne(Filters.eq("id", id),Updates.combine(
+				Updates.set("name", name),
+				Updates.set("height", height)
+			));
+		System.out.println("Document updated Successfully");
+	}
+	
+	public void deleteData(int id) {
+		docCollection.deleteOne(Filters.eq("id", id));
+		System.out.println("Document deleted Successfully");
 	}
 	
 	public void insertData(int id,String name,float height) {
@@ -56,6 +70,10 @@ public class CrudOperation {
 //		crud.insertData(3, "Yash", 99.12f); // used for inserting data
 		
 		System.out.println(crud.readDocument());
+		
+//		crud.updateData(2, "maulik", 12345.5434f);	
+		
+		crud.deleteData(1	);
 		
 		crud.closeCollection();
 		
